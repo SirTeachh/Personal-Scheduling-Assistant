@@ -23,5 +23,5 @@ The Personal Scheduling Assistant is an honours level, web-based system that aut
 Supervisor: Prof. T. Stott
 University of the Free State, Department of Computer Science & Informatics  
 
-## 🪪 License
+## License
 This project is licensed under the MIT License.
