@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewData["Title"] = "No Lecturer Profile";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h2 class="text-warning mb-4">No Lecturer Profile Found</h2>
+            <p class="lead">@ViewBag.Message</p>
+            <a asp-controller="Account" asp-action="Profile" class="btn btn-primary">Update Profile</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+﻿@model PersonalSchedulingAssistant.Models.Demmie
+@{
+    ViewData["Title"] = "Demmie Dashboard";
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">Welcome, @ViewBag.Name</h1>
+    @if ((ViewBag.IsOverloaded as bool?) == true)
+    {
+        <div class="alert alert-danger">
+            You’ve exceeded your weekly hour limit of @Model.WeeklyHourLimit hours!
+            Please contact your lecturer to rebalance your sessions.
+        </div>
+    }
+    <div class="row g-4">
+
+        <!-- My Availability -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-alt fa-3x mb-3 text-primary"></i>
+                    <h5 class="card-title">My Availability</h5>
+                    <p class="card-text text-muted">Manage your available times for scheduling sessions.</p>
+                    <a href="/DemmieAvailability/Index" class="btn btn-outline-primary btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x mb-3 text-success"></i>
+                    <h5 class="card-title">My Appointments</h5>
+                    <p class="card-text text-muted">View and manage your upcoming sessions.</p>
+                    <a href="/Demmie/Appointments" class="btn btn-outline-success btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hour Tracking -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-warning">
+                <div class="card-body text-center">
+                    <i class="fas fa-hourglass-half fa-3x mb-3 text-warning"></i>
+                    <h5 class="card-title">Hour Tracking</h5>
+                    <p class="card-text text-muted">Keep track of your working hours and contributions.</p>
+                    <a href="/Demmie/HourTracking" class="btn btn-outline-warning btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100 border-danger">
+                <div class="card-body text-center">
+                    <i class="fas fa-bell fa-3x mb-3 text-danger"></i>
+                    <h5 class="card-title">Notifications</h5>
+                    <p class="card-text text-muted">Check your latest alerts and messages.</p>
+                    <a href="/Demmie/Notifications" class="btn btn-outline-danger btn-sm">Go</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm text-center">
+                <div class="card-body">
+                    <h6>Total Sessions</h6>
+                    <h3 class="text-primary">@ViewBag.TotalSessions</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm text-center">
+                <div class="card-body">
+                    <h6>Hours Worked</h6>
+                    <h3 class="text-success">@ViewBag.TotalHours.ToString("0.##")</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-light shadow-sm text-center">
+                <div class="card-body">
+                    <h6>Pending Notifications</h6>
+                    <h3 class="text-danger">@ViewBag.Notifications</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modules Assigned -->
+    <div class="mt-5">
+        <h4 class="text-secondary mb-3">Assigned Modules</h4>
+        @if (ViewBag.AssignedModules != null && ((List<string>)ViewBag.AssignedModules).Any())
+        {
+            <ul class="list-group list-group-flush">
+                @foreach (var module in (List<string>)ViewBag.AssignedModules)
+                {
+                    <li class="list-group-item">@module</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">No assigned modules yet.</p>
+        }
+    </div>
+</div>

@@ -1,0 +1,15 @@
+﻿@model PersonalSchedulingAssistant.Models.User
+
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<h2>Delete User</h2>
+<div class="alert alert-warning">
+    Are you sure you want to delete the user: <strong>@Model.FirstName @Model.SecondName</strong>?
+</div>
+
+<form asp-action="Delete" method="post" asp-route-id="@Model.Id">
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

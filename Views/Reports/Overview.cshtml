@@ -1,0 +1,51 @@
+﻿@model ReportsOverviewViewModel
+@{
+    ViewData["Title"] = "Reports & Analytics";
+}
+
+<h2>Reports & Analytics Dashboard</h2>
+
+<hr />
+
+<h3>Top 5 Busiest Sessions</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>Start Time</th>
+            <th>Allocations</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.BusiestSessions)
+        {
+            <tr>
+                <td>@item.GetType().GetProperty("Day")?.GetValue(item)</td>
+                <td>@item.GetType().GetProperty("StartTime")?.GetValue(item)</td>
+                <td>@item.GetType().GetProperty("Count")?.GetValue(item)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="allocationsByModuleChart"></canvas>
+<script>
+    const labels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+                Model.AllocationsByModule.Select(m => m.GetType().GetProperty("ModuleCode")?.GetValue(m))
+        ));
+    const data = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+                Model.AllocationsByModule.Select(m => m.GetType().GetProperty("Count")?.GetValue(m))
+        ));
+
+    new Chart(document.getElementById('allocationsByModuleChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Allocations per Module',
+                data: data,
+                borderWidth: 1
+            }]
+        }
+    });
+</script>

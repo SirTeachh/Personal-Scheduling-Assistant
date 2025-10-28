@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PersonalSchedulingAssistant.Models
+@inject UserManager<User> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    var name = currentUser?.FirstName ?? currentUser?.UserName ?? "User";
+    <li class="nav-link">Hello, @name</li>
+}

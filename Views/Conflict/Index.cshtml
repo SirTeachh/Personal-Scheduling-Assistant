@@ -1,0 +1,151 @@
+﻿@model Dictionary<string, List<PersonalSchedulingAssistant.Models.Conflict>>
+
+@{
+    ViewData["Title"] = "Conflict Dashboard";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-danger">
+            <i class="bi bi-exclamation-triangle"></i> Conflict Dashboard
+        </h2>
+        <form asp-action="DetectConflicts" method="post">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-clockwise"></i> Re-Run Conflict Detection
+            </button>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-success shadow-sm p-4 rounded-3 text-center">
+            <i class="bi bi-check-circle-fill fs-4 me-2"></i>
+            No active conflicts detected
+        </div>
+    }
+    else
+    {
+        @foreach (var group in Model)
+        {
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-header bg-light d-flex align-items-center">
+                    <i class="bi @(group.Key == "Venue" ? "bi-building text-warning" : group.Key == "Student" ? "bi-person text-danger" : "bi-people text-info") fs-4 me-2"></i>
+                    <h4 class="m-0 fw-semibold">@group.Key Conflicts</h4>
+                </div>
+
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Description</th>
+                                <th>Status</th>
+                                <th>Suggested Resolution</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in group.Value)
+                            {
+                                <tr class="border-bottom">
+                                    <td class="ps-4">@c.Description</td>
+                                    <td>
+                                        @if (c.IsResolved)
+                                        {
+                                            <span class="badge bg-success rounded-pill">Resolved</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger rounded-pill">Unresolved</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(c.SuggestedResolution))
+                                        {
+                                            <div class="text-muted small">
+                                                <i class="bi bi-lightbulb"></i> @c.SuggestedResolution
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-secondary small fst-italic">No suggestion</span>
+                                        }
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        @if (!c.IsResolved)
+                                        {
+                                            <div class="btn-group">
+                                                <form asp-action="Resolve" method="post" class="me-2">
+                                                    <input type="hidden" name="id" value="@c.ConflictId" />
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        <i class="bi bi-check-circle"></i> Mark Resolved
+                                                    </button>
+                                                </form>
+
+                                                <form asp-action="ApplySuggestion" method="post" class="me-2">
+                                                    <input type="hidden" name="id" value="@c.ConflictId" />
+                                                    <button type="submit" class="btn btn-sm btn-primary">
+                                                        <i class="bi bi-lightning-charge"></i> Apply Suggestion
+                                                    </button>
+                                                </form>
+
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-secondary"
+                                                        data-id="@c.ConflictId">
+                                                    <i class="bi bi-pencil-square"></i> Override
+                                                </button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-check2-all text-success fs-5"></i>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+
+    <div class="d-flex justify-content-between align-items-center mt-5">
+        @{
+            if (User.IsInRole("Lecturer"))
+            {
+                <a asp-controller="Lecturer" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+                    <i class="fas fa-home me-2"></i> Back to Overview
+                </a>
+                <a asp-controller="DemmieDistribution" asp-action="Index" class="btn btn-primary px-4 py-2 fw-semibold">
+                    <i class="fas fa-tasks me-2"></i> Demmie Distribution
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+                    <i class="fas fa-home me-2"></i> Back to Overview
+                </a>
+            }
+        }
+
+    </div>
+</div>
+
+<div id="manualOverrideModalContainer"></div>
+
+@section Scripts {
+    <script>
+        // Load manual override form dynamically
+        const modalContainer = document.getElementById('manualOverrideModalContainer');
+        document.querySelectorAll('button[data-id]').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const id = this.getAttribute('data-id');
+                const response = await fetch(`/Conflict/ManualOverride/${id}`);
+                const html = await response.text();
+                modalContainer.innerHTML = html;
+                const modal = new bootstrap.Modal(document.getElementById('manualOverrideModal'));
+                modal.show();
+            });
+        });
+    </script>
+}

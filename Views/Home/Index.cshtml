@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+<div class="hero-section text-center text-white d-flex align-items-center justify-content-center">
+    <div>
+        <h1 class="display-4 fw-bold">Personal Scheduling Assistant</h1>
+        <p class="lead">Smart, streamlined scheduling for Students, Lecturers, and Admins</p>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg me-2">Login</a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg">Register</a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body">
+                    <i class="fas fa-calendar-check display-4 text-primary mb-3"></i>
+                    <h5 class="card-title">Smart Scheduling</h5>
+                    <p class="card-text">Automatically manage lectures, test slots, and venues with conflict resolution.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body">
+                    <i class="fas fa-users display-4 text-success mb-3"></i>
+                    <h5 class="card-title">Role-Based Access</h5>
+                    <p class="card-text">Students, Lecturers, and Admins each get tailored views and permissions.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body">
+                    <i class="fas fa-bell display-4 text-warning mb-3"></i>
+                    <h5 class="card-title">Notifications</h5>
+                    <p class="card-text">Stay updated with test schedules, changes, and personalized reminders.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section text-center text-white mt-5">
+    <h2 class="fw-bold">Start managing your time smarter today</h2>
+    <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg mt-3">Get Started</a>
+</div>

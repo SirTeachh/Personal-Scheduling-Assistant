@@ -1,0 +1,111 @@
+﻿@model PersonalSchedulingAssistant.Models.ViewModels.DemmieDistributionViewModel
+@{
+    ViewData["Title"] = "Demmie Distribution";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Demmie Distribution — @Model.LecturerName</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center">@TempData["Error"]</div>
+    }
+
+    <div class="card shadow-sm p-3">
+        <div class="card-body">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Module</th>
+                        <th>Weekday</th>
+                        <th>Time</th>
+                        <th>Venue</th>
+                        <th>Assigned Demmies</th>
+                        <th>Assign New</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Sessions.Any())
+                    {
+                        @foreach (var s in Model.Sessions)
+                        {
+                            <tr>
+                                <td>@s.Module?.ModuleCode</td>
+                                <td>@s.WeekDay</td>
+                                <td>@s.StartTime - @s.EndTime</td>
+                                <td>@s.Venue?.Name</td>
+
+                                <!-- Assigned Demmies -->
+                                <td>
+                                    @if (Model.AssignedDemmies.ContainsKey(s.SessionId) && Model.AssignedDemmies[s.SessionId].Any())
+                                    {
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach (var d in Model.AssignedDemmies[s.SessionId])
+                                            {
+                                                <li class="d-flex justify-content-between align-items-center mb-1">
+                                                    <span>@d.User?.FirstName @d.User?.SecondName</span>
+                                                    <form asp-action="Unassign" method="post" class="d-inline">
+                                                        <input type="hidden" name="sessionId" value="@s.SessionId" />
+                                                        <input type="hidden" name="demmieId" value="@d.DemmieId" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No demmie assigned</span>
+                                    }
+                                </td>
+
+                                <!-- Assign New -->
+                                <td>
+                                    <form asp-action="Assign" method="post" class="d-flex">
+                                        <input type="hidden" name="sessionId" value="@s.SessionId" />
+                                        <select name="demmieId" class="form-select me-2" required>
+                                            <option value="">-- Select Available Demmie --</option>
+                                            @if (Model.SessionAvailableDemmies.ContainsKey(s.SessionId))
+                                            {
+                                                var available = Model.SessionAvailableDemmies[s.SessionId];
+                                                if (available.Any())
+                                                {
+                                                    foreach (var d in available)
+                                                    {
+                                                        <option value="@d.DemmieId">@d.User?.FirstName @d.User?.SecondName</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <option disabled>No available demmies</option>
+                                                }
+                                            }
+                                        </select>
+
+                                        <button type="submit" class="btn btn-sm btn-primary">Assign</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="6" class="text-center text-muted">No sessions found for your modules.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="align-items-center mt-4">
+        <a asp-controller="Lecturer" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            <i class="fas fa-home me-2"></i> Back to Overview
+        </a>
+    </div>
+</div>

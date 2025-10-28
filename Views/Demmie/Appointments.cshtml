@@ -1,0 +1,50 @@
+﻿@model IEnumerable<PersonalSchedulingAssistant.Models.bridgeDemmie_Session>
+
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-success"><i class="fas fa-clock"></i> My Appointments</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            <i class="fas fa-info-circle"></i> You have no appointments scheduled yet.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover shadow-sm">
+            <thead class="table-success">
+                <tr>
+                    <th>Module</th>
+                    <th>Day</th>
+                    <th>Venue</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var session in Model)
+                {
+                    <tr>
+                        <td>@session.ModuleCode</td>
+                        <td>@session.WeekDay</td>
+                        <td>@session.VenueName</td>
+                        <td>@session.Session?.StartTime</td>
+                        <td>@session.Session?.EndTime</td>
+                        <td>@session.Session?.Type</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="align-items-center mt-4">
+        <a asp-controller="Demmie" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            <i class="fas fa-home me-2"></i> Back to Overview
+        </a>
+    </div>
+</div>

@@ -1,0 +1,154 @@
+﻿@model IEnumerable<PersonalSchedulingAssistant.Models.Allocation>
+
+@{
+    ViewData["Title"] = "Finalised Allocations";
+}
+
+<h2 class="mb-4">Finalised Allocations</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-info">@TempData["Info"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No finalised allocations available.</div>
+}
+else
+{
+    var groupedByModule = Model
+        .Where(a => a.Session?.Module != null)
+        .GroupBy(a => a.Session!.Module!);
+
+    <div class="accordion" id="moduleAccordion">
+        @foreach (var moduleGroup in groupedByModule)
+        {
+            var moduleId = moduleGroup.Key.ModuleId;
+            var moduleName = $"{moduleGroup.Key.ModuleCode} - {moduleGroup.Key.ModuleName}";
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-@moduleId">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse-@moduleId" aria-expanded="false"
+                            aria-controls="collapse-@moduleId">
+                        <strong>@moduleName</strong>
+                    </button>
+                </h2>
+                <div id="collapse-@moduleId" class="accordion-collapse collapse"
+                     aria-labelledby="heading-@moduleId" data-bs-parent="#moduleAccordion">
+                    <div class="accordion-body">
+
+                        @{
+                            var groupedBySession = moduleGroup
+                                .GroupBy(a => new
+                                {
+                                    a.Session!.SessionId,
+                                    a.Session!.Type,
+                                    VenueName = a.Session!.Venue?.Name ?? "Unknown Venue",
+                                    a.Session!.WeekDay,
+                                    a.Session!.StartTime,
+                                    a.Session!.EndTime
+                                });
+                        }
+
+                        <div class="accordion" id="sessionAccordion-@moduleId">
+                            @foreach (var sessionGroup in groupedBySession)
+                            {
+                                var sessionKey = sessionGroup.Key;
+                                var sessionId = sessionKey.SessionId;
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="sessionHeading-@sessionId">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#sessionCollapse-@sessionId"
+                                                aria-expanded="false"
+                                                aria-controls="sessionCollapse-@sessionId">
+                                            <span>
+                                                <strong>@(sessionKey.Type ?? "Session")</strong> — @sessionKey.VenueName
+                                                (@sessionKey.WeekDay @sessionKey.StartTime-@sessionKey.EndTime)
+                                                <span class="badge bg-info ms-2">@($"{sessionGroup.Count()} Students")</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="sessionCollapse-@sessionId"
+                                         class="accordion-collapse collapse"
+                                         aria-labelledby="sessionHeading-@sessionId"
+                                         data-bs-parent="#sessionAccordion-@moduleId">
+                                        <div class="accordion-body">
+
+                                            <table class="table table-sm table-bordered align-middle mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="width:50%">Student</th>
+                                                        <th>Student Number</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var a in sessionGroup)
+                                                    {
+                                                        <tr>
+                                                            <td>@($"{a.Student?.FirstName} {a.Student?.LastName}")</td>
+                                                            <td>@a.Student?.StudentNumber</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@* <div class="mt-4"> *@
+    @{
+        if (User.IsInRole("Lecturer"))
+        {
+        <div class="mt-4 d-flex flex-wrap justify-content-between align-items-center">
+            <a asp-action="Configure" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Back to Allocation Config
+             </a>
+
+            <div class="d-flex flex-wrap justify-content-end gap-2">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#confirmSendTimetablesModal">
+                    <i class="bi bi-envelope"></i> Send Timetables
+                </button>
+
+                <a asp-controller="Conflict" asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-exclamation-triangle"></i> View Conflicts
+                </a>
+            </div>
+            </div>
+        }
+        else
+        {
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+                <i class="fas fa-home me-2"></i> Back to Overview
+            </a>
+        }
+    }
+@* </div> *@
+@section Scripts {
+    <script>
+        //Collapse all accordions on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const accordions = document.querySelectorAll('.accordion-collapse');
+            accordions.forEach(a => a.classList.remove('show'));
+        });
+    </script>
+}
+<partial name="_ConfirmSendTimetablesModal" />

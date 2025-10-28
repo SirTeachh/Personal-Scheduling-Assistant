@@ -1,0 +1,284 @@
+﻿@model PersonalSchedulingAssistant.Models.ViewModels.AllocationConfigViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+<div class="container mt-4">
+    <h2 class="text-primary">Lecturer Configuration Dashboard</h2>
+
+    <form asp-action="Configure" method="post" id="allocationForm">
+        <!--  Module -->
+        <div class="mb-3">
+            <label class="form-label">Course:</label>
+            <select asp-for="SelectedModuleId"
+                    asp-items="@(new SelectList(Model.Modules, "ModuleId", "ModuleCode"))"
+                    class="form-select"
+                    id="moduleSelect">
+                <option value="">-- Select a Module --</option>
+            </select>
+        </div>
+
+        <!--  Session -->
+        <div class="mb-3">
+            <label class="form-label">Session:</label>
+            <select asp-for="SelectedSessionId"
+                    class="form-select"
+                    id="sessionSelect">
+                <option value="">-- Select a Session --</option>
+            </select>
+            <small class="text-muted">Sessions are filtered based on the selected module.</small>
+        </div>
+
+        <!--  Venues -->
+        <div class="mb-3">
+            <label class="form-label">Preferred Venues (with capacity):</label>
+            <select asp-for="SelectedVenueIds" class="form-select" multiple>
+                @foreach (var venue in Model.Venues)
+                {
+                    <option value="@venue.VenueId">
+                        @venue.Name (@venue.Capacity seats)
+                    </option>
+                }
+            </select>
+        </div>
+
+        <!--  Allocation Type -->
+        <div class="mb-3">
+            <label class="form-label">Allocation Type:</label>
+            <select asp-for="AllocationType" class="form-select">
+                <option value="First Come, First Serve">First Come, First Serve</option>
+                <option value="Balanced">Balanced</option>
+                <option value="Round Robin">Round Robin</option>
+                <option value="Venue Capacity">Venue Capacity</option>
+                <option value="Random">Random</option>
+            </select>
+        </div>
+
+        <!-- Group Size -->
+        <div class="mb-3">
+            <label class="form-label">Group Size Limit:</label>
+            <input asp-for="GroupSizeLimit" type="number" class="form-control" />
+        </div>
+
+        <!-- Total Students -->
+        <div class="mb-3">
+            <label class="form-label">Total Students:</label>
+            <input asp-for="TotalStudents" class="form-control" readonly />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Preview Allocation</button>
+    </form>
+</div>
+
+<!--  Bootstrap Modal for Preview -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Allocation Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                @if (Model?.Preview?.Any() == true)
+                {
+                    <div class="alert alert-secondary">
+                        <h5 class="fw-bold mb-2">Session Allocation Preview</h5>
+                        <p><strong>Session:</strong> @Model.SelectedSessionName</p>
+                        <p><strong>Venues:</strong> @string.Join(", ", Model.Preview.Keys)</p>
+                        <p><strong>Allocation Strategy:</strong> @Model.AllocationType</p>
+                        <p><strong>Group Size:</strong> @(Model.GroupSizeLimit > 0 ? Model.GroupSizeLimit : "N/A") max</p>
+                    </div>
+
+                    @foreach (var venue in Model.Preview)
+                    {
+                        var venueInfo = Model.Venues.FirstOrDefault(v => v.Name == venue.Key);
+                        var venueCapacity = venueInfo?.Capacity ?? 0;
+                        var isOverCapacity = venue.Value.Count > venueCapacity;
+
+                        <div class="card mb-3 @(isOverCapacity ? "border-danger" : "")">
+                            <div class="card-header bg-secondary text-white d-flex justify-content-between">
+                                <span>@venue.Key</span>
+                                <span class="badge bg-light text-dark">@venue.Value.Count / @venueCapacity students</span>
+                            </div>
+                            <div class="card-body">
+                                <ul class="mb-0">
+                                    @foreach (var student in venue.Value)
+                                    {
+                                        <li>@student.FullName</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No preview available.</p>
+                }
+            </div>
+
+            <div class="modal-footer">
+                <form asp-action="Confirm" method="post">
+                    <input type="hidden" name="SelectedModuleId" value="@Model.SelectedModuleId" />
+                    <input type="hidden" name="SelectedSessionId" value="@Model.SelectedSessionId" />
+                    <input type="hidden" name="AllocationType" value="@Model.AllocationType" />
+                    <input type="hidden" name="GroupSizeLimit" value="@Model.GroupSizeLimit" />
+                    @if (Model.SelectedVenueIds != null)
+                    {
+                        @foreach (var v in Model.SelectedVenueIds)
+                        {
+                            <input type="hidden" name="SelectedVenueIds" value="@v" />
+                        }
+                    }
+                    <button type="submit" class="btn btn-success">Confirm Allocation</button>
+                </form>
+                @if (Model.Preview != null && Model.Preview.ContainsKey("Unallocated (no space/group limit)"))
+                {
+                    <button type="button" class="btn btn-warning text-dark" data-bs-toggle="modal" data-bs-target="#newSessionModal">
+                        <i class="fas fa-plus-circle"></i> Add New Session
+                    </button>
+                }
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Create New Session for Unallocated Students -->
+<div class="modal fade" id="newSessionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Create New Session</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="AddNewSession" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="SelectedModuleId" value="@Model.SelectedModuleId" />
+                    <input type="hidden" name="SelectedSessionId" value="@Model.SelectedSessionId" />
+                    <input type="hidden" name="AllocationType" value="@Model.AllocationType" />
+                    <input type="hidden" name="GroupSizeLimit" value="@Model.GroupSizeLimit" />
+                    <input type="hidden" id="SessionType" name="Type" value="@Model.Sessions?.FirstOrDefault(s => s.SessionId == Model.SelectedSessionId)?.Type" />
+
+                    @if (Model.SelectedVenueIds != null)
+                    {
+                        @foreach (var v in Model.SelectedVenueIds)
+                        {
+                            <input type="hidden" name="SelectedVenueIds" value="@v" />
+                        }
+                    }
+
+                    <div class="mb-3">
+                        <label class="form-label">Weekday</label>
+                        <select name="WeekDay" class="form-select" required>
+                            <option value="">-- Select a Day --</option>
+                            <option>Monday</option>
+                            <option>Tuesday</option>
+                            <option>Wednesday</option>
+                            <option>Thursday</option>
+                            <option>Friday</option>
+                            <option>Saturday</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Start Time</label>
+                        <input type="time" name="StartTime" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">End Time</label>
+                        <input type="time" name="EndTime" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Venue</label>
+                        <select name="VenueId" class="form-select" required>
+                            <option value="">-- Select a Venue --</option>
+                            @foreach (var venue in Model.Venues)
+                            {
+                                <option value="@venue.VenueId">@venue.Name (@venue.Capacity seats)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <p class="text-muted small">
+                        <i class="fas fa-info-circle"></i> The unallocated students will automatically be assigned to this new session. Allocated students remain with the selected session.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning text-dark">
+                        <i class="fas fa-save"></i> Create and Assign
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success mt-3">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-3">@TempData["Error"]</div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var hasPreview = '@(Model.Preview != null && Model.Preview.Any() ? "true" : "false")';
+            if (hasPreview === "true") {
+                var modal = new bootstrap.Modal(document.getElementById("previewModal"));
+                modal.show();
+            }
+
+            // sessions for selected module
+            document.getElementById("moduleSelect").addEventListener("change", function () {
+                var moduleId = this.value;
+                var sessionSelect = document.getElementById("sessionSelect");
+                sessionSelect.innerHTML = '<option value="">-- Select a Session --</option>';
+
+                if (moduleId) {
+                    sessionSelect.innerHTML += '<option>Loading...</option>';
+
+                    fetch('/Allocations/GetSessionsByModule?moduleId=' + moduleId)
+                        .then(res => res.json())
+                        .then(data => {
+                            sessionSelect.innerHTML = '<option value="">-- Select a Session --</option>';
+                            data.forEach(s => {
+                                sessionSelect.innerHTML += `<option value="${s.sessionId}">${s.displayName}</option>`;
+                            });
+                        })
+                        .catch(() => {
+                            sessionSelect.innerHTML = '<option value="">-- Select a Session --</option>';
+                        });
+                }
+            });
+
+                    //   fetch total students
+        document.getElementById("moduleSelect").addEventListener("change", function () {
+            var moduleId = this.value;
+            var totalStudentsInput = document.querySelector("[name='TotalStudents']");
+
+            if (moduleId) {
+                fetch('/Allocations/GetStudentCountByModule?moduleId=' + moduleId)
+                    .then(res => res.json())
+                    .then(data => {
+                        totalStudentsInput.value = data.count;
+                    })
+                    .catch(() => {
+                        totalStudentsInput.value = "0";
+                    });
+            } else {
+                totalStudentsInput.value = "";
+            }
+        });
+
+        });
+    </script>
+}

@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<div class="admin-hero-section text-white d-flex align-items-center justify-content-center text-center">
+    <div>
+        <h1 class="display-4 fw-bold">Welcome, @ViewBag.Name!</h1>
+        <p class="lead">Manage users, roles, and oversee scheduling effortlessly.</p>
+        <a asp-controller="User" asp-action="Index" class="btn btn-primary btn-lg me-2">Manage Users</a>
+        <a asp-controller="Allocations" asp-action="Finalised" class="btn btn-outline-light btn-lg">View Allocations</a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row text-center g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-3 py-4">
+                <i class="bi bi-people-fill display-4 text-primary mb-3"></i>
+                <h5 class="card-title fw-bold">User Management</h5>
+                <p class="card-text">Add, remove, or assign roles to users with a few clicks.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-3 py-4">
+                <i class="bi bi-calendar-check-fill display-4 text-success mb-3"></i>
+                <h5 class="card-title fw-bold">Schedule Oversight</h5>
+                <p class="card-text">Monitor all student and lecturer schedules to avoid conflicts.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-3 py-4">
+                <i class="bi bi-bell-fill display-4 text-warning mb-3"></i>
+                <h5 class="card-title fw-bold">Notifications</h5>
+                <p class="card-text">Send updates, reminders, or announcements to users quickly.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call-To-Action Section -->
+<div class="cta-section-admin text-center text-white mt-5">
+    <h2 class="fw-bold">Take control of your scheduling system</h2>
+
+    <div class="mt-4">
+        <a asp-controller="Conflict" asp-action="Index" class="btn btn-light btn-lg me-3">
+            <i class="bi bi-exclamation-triangle"></i> View Conflicts
+        </a>
+
+        <!-- REPORTS BUTTON -->
+        <a asp-controller="Reports" asp-action="Index" class="btn btn-outline-light btn-lg">
+            <i class="bi bi-graph-up"></i> Reports & Analytics
+        </a>
+    </div>
+</div>

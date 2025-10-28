@@ -1,0 +1,21 @@
+﻿@model PersonalSchedulingAssistant.Models.Allocation
+
+@{
+    ViewData["Title"] = "Assign Student";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary">Assign Student to Session</h2>
+
+    <form asp-action="Assign">
+        <input type="hidden" asp-for="SessionId" />
+
+        <div class="mb-3">
+            <label class="form-label">Select Student</label>
+            <select asp-for="StudentId" asp-items="ViewBag.StudentList" class="form-select"></select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Assign</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

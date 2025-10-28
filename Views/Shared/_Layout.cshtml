@@ -1,0 +1,156 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" asp-href-include="/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/all.min.css" />
+    @* <link rel="stylesheet" asp-href-include="/css/styles.css" /> *@
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" /> 
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline m-0 p-0">
+                        <button type="submit" class="btn btn-link navbar-brand text-decoration-none text-light p-0">
+                            Scheduling Assistant
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a class="navbar-brand" href="/">Scheduling Assistant</a>
+                }
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home"
+                                       && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                               href="/Home/Index">Home</a>
+
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "WhatWeOffer" ? "active" : "")" href="/Home/WhatWeOffer">What We Offer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "AboutUs" ? "active" : "")" href="/Home/AboutUs">About</a>
+                            </li>
+                        }
+                        else
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" href="/Admin/Index">Overview</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Lecturer"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(
+                                       ViewContext.RouteData.Values["controller"]?.ToString() == "Lecturer" &&
+                                       ViewContext.RouteData.Values["action"]?.ToString() == "Index"
+                                           ? "active" : "")" href="/Lecturer/Index">Overview</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Sessions" ? "active" : "")" href="/Sessions/Index">Session Management</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Allocations" ? "active" : "")" href="/Allocations/Index">Allocations</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Conflict" ? "active" : "")" href="/Conflict/Index">Conflicts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "DemmieDistribution" ? "active" : "")" href="/DemmieDistribution/Index">Demmie Distribution</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(
+                                       ViewContext.RouteData.Values["controller"]?.ToString() == "Lecturer" &&
+                                       ViewContext.RouteData.Values["action"]?.ToString() == "Notifications"
+                                           ? "active" : "")" href="/Lecturer/Notifications">Notifications</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Demmie"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link @(
+                                       ViewContext.RouteData.Values["controller"]?.ToString() == "Demmie" &&
+                                       ViewContext.RouteData.Values["action"]?.ToString() == "Index"
+                                           ? "active" : "")" href="/Demmie/Index">Overview</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(
+                                                       ViewContext.RouteData.Values["controller"]?.ToString() == "DemmieAvailability" &&
+                                                       ViewContext.RouteData.Values["action"]?.ToString() == "Index"
+                                                           ? "active" : "")" href="/DemmieAvailability/Index">My Availability</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(
+                                                       ViewContext.RouteData.Values["controller"]?.ToString() == "Demmie" &&
+                                                       ViewContext.RouteData.Values["action"]?.ToString() == "Appointments"
+                                                           ? "active" : "")" href="/Demmie/Appointments">My Appointments</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(
+                                                       ViewContext.RouteData.Values["controller"]?.ToString() == "Demmie" &&
+                                                       ViewContext.RouteData.Values["action"]?.ToString() == "HourTracking"
+                                                           ? "active" : "")" href="/Demmie/HourTracking">Hour Tracking</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(
+                                                       ViewContext.RouteData.Values["controller"]?.ToString() == "Demmie" &&
+                                                       ViewContext.RouteData.Values["action"]?.ToString() == "Notifications"
+                                                           ? "active" : "")" href="/Demmie/Notifications">Notifications</a>
+                                    </li>
+                            }
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @await Html.PartialAsync("_UserInfo")
+                            <form method="post" asp-controller="Account" asp-action="Logout" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link" >Logout</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" href="/Account/Login">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/Account/Register">Register</a></li>
+                        }
+                        
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <main role="main" class="container">
+            @RenderBody()
+    </main>
+
+
+    <footer class="footer bg-light text-center text-muted py-3 mt-5">
+        <div class="container">
+            <p>Oratile Molongwana</p>
+            <span>&copy; @DateTime.Now.Year - Scheduling Assistant</span>
+        </div>
+    </footer>
+    @* bootstrap script *@
+    <script asp-src-include="/lib/bootstrap/js/bootstrap.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

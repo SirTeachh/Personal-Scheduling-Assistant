@@ -1,0 +1,82 @@
+﻿
+@model PersonalSchedulingAssistant.Models.Session
+@{
+    ViewData["Title"] = "Edit Session";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4">Edit Session</h2>
+
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <input type="hidden" asp-for="SessionId" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="ModuleId" class="form-label" for="ModuleId"></label>
+                    <select asp-for="ModuleId" class="form-select" id="ModuleId" asp-items="ViewBag.Modules">
+                        <option value="">-- Select Module --</option>
+                    </select>
+                    <span asp-validation-for="ModuleId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="VenueId" class="form-label" for="VenueId"></label>
+                    <select asp-for="VenueId" class="form-select" id="VenueId" asp-items="ViewBag.Venues">
+                        <option value="">-- Select Venue --</option>
+                    </select>
+                    <span asp-validation-for="VenueId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label asp-for="WeekDay" class="form-label"></label>
+                    <select asp-for="WeekDay" class="form-select">
+                        <option value="">-- Select Day --</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                    <span asp-validation-for="WeekDay" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label asp-for="StartTime" class="form-label"></label>
+                    <input asp-for="StartTime" type="time" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label asp-for="EndTime" class="form-label"></label>
+                    <input asp-for="EndTime" type="time" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="CapacityOverride" class="form-label"></label>
+            <input asp-for="CapacityOverride" type="number" class="form-control" />
+            <span asp-validation-for="CapacityOverride" class="text-danger"></span>
+            <div class="form-text">Optional override for venue capacity.</div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

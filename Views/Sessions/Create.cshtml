@@ -1,0 +1,348 @@
+﻿@model PersonalSchedulingAssistant.Models.Session
+@{
+    ViewData["Title"] = "Create Session";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4">Add New Session</h2>
+
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <!-- Module & Venue Selection -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="ModuleId" class="form-label"></label>
+                    <div class="input-group">
+                        <select asp-for="ModuleId" class="form-select" id="ModuleId" asp-items="ViewBag.Modules">
+                            <option value="">-- Select Module --</option>
+                        </select>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#moduleModal">
+                            <i class="bi bi-plus"></i> New
+                        </button>
+                    </div>
+                    <span asp-validation-for="ModuleId" class="text-danger"></span>
+                    <div class="form-text">Select an existing module or add a new one.</div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="VenueId" class="form-label"></label>
+                <div class="input-group">
+                    <select asp-for="VenueId" class="form-select" id="VenueId" asp-items="ViewBag.Venues">
+                        <option value="">-- Select Venue --</option>
+                    </select>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#venueModal">
+                        <i class="bi bi-plus"></i> New
+                    </button>
+                </div>
+                <span asp-validation-for="VenueId" class="text-danger"></span>
+                <div class="form-text">Select an existing venue or add a new one.</div>
+            </div>
+        </div>
+
+        <!-- Day, Time & Type -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label asp-for="WeekDay" class="form-label"></label>
+                    <select asp-for="WeekDay" class="form-select">
+                        <option value="">-- Select Day --</option>
+                        <option>Monday</option>
+                        <option>Tuesday</option>
+                        <option>Wednesday</option>
+                        <option>Thursday</option>
+                        <option>Friday</option>
+                        <option>Saturday</option>
+                        <option>Sunday</option>
+                    </select>
+                    <span asp-validation-for="WeekDay" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label asp-for="StartTime" class="form-label"></label>
+                    <input asp-for="StartTime" type="time" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label asp-for="EndTime" class="form-label"></label>
+                    <input asp-for="EndTime" type="time" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Type Dropdown -->
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label"></label>
+                    <select asp-for="Type" class="form-select">
+                        <option value="">-- Select Type --</option>
+                        <option value="Lecture">Lecture</option>
+                        <option value="Tutorial">Tutorial</option>
+                        <option value="Practical">Practical</option>
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Back to List
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Modal for Adding New Module -->
+<div class="modal fade" id="moduleModal" tabindex="-1" aria-labelledby="moduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moduleModalLabel">Add New Module</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="moduleForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="ModuleCode" class="form-label">Module Code</label>
+                        <input type="text" class="form-control" id="ModuleCode" name="ModuleCode" required maxlength="20" />
+                        <div class="invalid-feedback" id="ModuleCode-error"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ModuleName" class="form-label">Module Name</label>
+                        <input type="text" class="form-control" id="ModuleName" name="ModuleName" required maxlength="200" />
+                        <div class="invalid-feedback" id="ModuleName-error"></div>
+                    </div>
+                    <div class="text-danger" id="general-error"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Module</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal for Adding New Venue -->
+<div class="modal fade" id="venueModal" tabindex="-1" aria-labelledby="venueModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="venueModalLabel">Add New Venue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="venueForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="VenueName" class="form-label">Venue Name</label>
+                        <input type="text" class="form-control" id="VenueName" name="Name" required maxlength="100" />
+                        <div class="invalid-feedback" id="VenueName-error"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="BuildingId" class="form-label">Building</label>
+                        <div class="input-group">
+                            <select class="form-select" id="BuildingId" name="BuildingId">
+                                @if (ViewBag.Buildings as List<Building> != null && (ViewBag.Buildings as List<Building>).Any())
+                                {
+                                    foreach (var building in ViewBag.Buildings as List<Building>)
+                                    {
+                                        <option value="@building.BuildingId">@building.BuildingName</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option disabled>No buildings available</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#buildingModal">
+                                <i class="bi bi-plus"></i> New
+                            </button>
+                        </div>
+                        <div class="invalid-feedback" id="BuildingId-error"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="VenueCapacity" class="form-label">Capacity</label>
+                        <input type="number" class="form-control" id="VenueCapacity" name="Capacity" required min="1" />
+                        <div class="invalid-feedback" id="VenueCapacity-error"></div>
+                    </div>
+
+                    <div class="text-danger" id="venue-general-error"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Venue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding New Building -->
+<div class="modal fade" id="buildingModal" tabindex="-1" aria-labelledby="buildingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="buildingModalLabel">Add New Building</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="buildingForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="BuildingName" class="form-label">Building Name</label>
+                        <input type="text" class="form-control" id="BuildingName" name="BuildingName" required maxlength="100" />
+                        <div class="invalid-feedback" id="BuildingName-error"></div>
+                    </div>
+                    <div class="text-danger" id="building-general-error"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Building</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const moduleForm = document.getElementById("moduleForm");
+            const moduleSelect = document.getElementById("ModuleId");
+            const moduleModalEl = document.getElementById("moduleModal");
+            if (!moduleForm || !moduleSelect || !moduleModalEl) {
+                console.error("Required elements not found");
+                return;
+            }
+
+            const moduleModal = new bootstrap.Modal(moduleModalEl);
+
+            moduleForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                // Clear previous errors
+                document.querySelectorAll(".invalid-feedback, #general-error").forEach(el => el.textContent = "");
+                document.querySelectorAll(".is-invalid").forEach(el => el.classList.remove("is-invalid"));
+
+                const formData = new FormData(moduleForm);
+                const token = moduleForm.querySelector("input[name=__RequestVerificationToken]").value;
+
+                fetch("/Sessions/CreateModule", {
+                    method: "POST",
+                    body: formData,
+                    headers: { "RequestVerificationToken": token }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const newOption = new Option(`${data.moduleCode} - ${data.moduleName}`, data.moduleId, true, true);
+                        moduleSelect.appendChild(newOption);
+                        moduleSelect.value = data.moduleId;
+                        moduleModal.hide();
+                        moduleForm.reset();
+                    } else if (data.errors) {
+                        if (data.errors.general) document.getElementById("general-error").textContent = data.errors.general;
+                        if (data.errors.ModuleCode) {
+                            const codeInput = document.getElementById("ModuleCode");
+                            codeInput.classList.add("is-invalid");
+                            document.getElementById("ModuleCode-error").textContent = data.errors.ModuleCode;
+                        }
+                        if (data.errors.ModuleName) {
+                            const nameInput = document.getElementById("ModuleName");
+                            nameInput.classList.add("is-invalid");
+                            document.getElementById("ModuleName-error").textContent = data.errors.ModuleName;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    document.getElementById("general-error").textContent = "An error occurred while adding the module.";
+                });
+            });
+        });
+
+        // venue and building
+               document.addEventListener("DOMContentLoaded", function () {
+            // VENUE FORM HANDLER
+            const venueForm = document.getElementById("venueForm");
+            const venueSelect = document.getElementById("VenueId");
+            const venueModal = new bootstrap.Modal(document.getElementById("venueModal"));
+
+            venueForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(venueForm);
+                const token = venueForm.querySelector("input[name=__RequestVerificationToken]").value;
+
+                fetch("/Sessions/CreateVenue", {
+                    method: "POST",
+                    body: formData,
+                    headers: { "RequestVerificationToken": token }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const newOption = new Option(`${data.venueName} (${data.buildingName})`, data.venueId, true, true);
+                        venueSelect.appendChild(newOption);
+                        venueSelect.value = data.venueId;
+                        venueModal.hide();
+                        venueForm.reset();
+                    } else {
+                        document.getElementById("venue-general-error").textContent = data.errors?.general ?? "Validation error.";
+                    }
+                });
+            });
+
+            // BUILDING FORM HANDLER
+            const buildingForm = document.getElementById("buildingForm");
+            const buildingSelect = document.getElementById("BuildingId");
+            const buildingModal = new bootstrap.Modal(document.getElementById("buildingModal"));
+
+            buildingForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(buildingForm);
+                const token = buildingForm.querySelector("input[name=__RequestVerificationToken]").value;
+
+                fetch("/Sessions/CreateBuilding", {
+                    method: "POST",
+                    body: formData
+                    // headers: { "RequestVerificationToken": token }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const newOption = new Option(data.buildingName, data.buildingId, true, true);
+                        buildingSelect.appendChild(newOption);
+                        buildingSelect.value = data.buildingId;
+                        buildingModal.hide();
+                        buildingForm.reset();
+                    } else {
+                        document.getElementById("building-general-error").textContent = data.errors?.general ?? "Validation error.";
+                    }
+                });
+            });
+        });
+
+
+    </script>
+}

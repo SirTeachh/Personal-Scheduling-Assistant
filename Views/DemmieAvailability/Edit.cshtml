@@ -1,0 +1,47 @@
+﻿@model List<PersonalSchedulingAssistant.Models.DemmieAvailability>
+
+@{
+    ViewData["Title"] = "Edit My Availability";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-3">
+        <i class="bi bi-clock"></i> Edit My Weekly Availability
+    </h2>
+
+    <form asp-action="Edit" method="post">
+        <table class="table table-bordered align-middle shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Weekday</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Available?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model[i].WeekDay
+                            <input type="hidden" asp-for="@Model[i].AvailabilityId" />
+                            <input type="hidden" asp-for="@Model[i].WeekDay" />
+                            <input type="hidden" asp-for="@Model[i].DemmieId" />
+                        </td>
+                        <td><input type="time" asp-for="@Model[i].StartTime" class="form-control" /></td>
+                        <td><input type="time" asp-for="@Model[i].EndTime" class="form-control" /></td>
+                        <td class="text-center">
+                            <input type="checkbox" asp-for="@Model[i].IsAvailable" class="form-check-input" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-save"></i> Save Changes
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

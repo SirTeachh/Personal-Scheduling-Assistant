@@ -1,0 +1,133 @@
+﻿@model PersonalSchedulingAssistant.Models.Conflict
+
+<div class="modal fade" id="manualOverrideModal" tabindex="-1" aria-labelledby="manualOverrideLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="manualOverrideLabel">
+                    <i class="bi bi-pencil-square"></i> Manual Override — @Model.Type Conflict
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-action="ManualOverride" method="post">
+                @Html.AntiForgeryToken()  
+                <input type="hidden" name="id" value="@Model.ConflictId" />
+                <input type="hidden" name="type" value="@Model.Type" />
+
+                <div class="modal-body">
+                    <p class="text-muted mb-3">@Model.Description</p>
+                    <hr />
+
+                    @if (Model.Type == "Venue")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reassign Session to New Venue</label>
+                            <select name="newVenueId" class="form-select">
+                                <option value="">-- Select New Venue --</option>
+                                @{
+                                    var altVenues = ViewBag.AlternativeVenues as SelectList;
+                                    if (altVenues != null && altVenues.Count() > 0)
+                                    {
+                                        foreach (var option in altVenues)
+                                        {
+                                            <option value="@option.Value">@option.Text</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option disabled class="text-muted">No alternative venues available</option>
+                                    }
+                                }
+                            </select>
+                            <small class="text-muted">Choose an alternative venue with sufficient capacity.</small>
+                        </div>
+                    }
+                    else if (Model.Type == "Student")
+                    {
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reassign Student to New Session</label>
+                            <select name="newSessionId" class="form-select">
+                                <option value="">-- Select New Session --</option>
+                                @{
+                                    var altSessions = ViewBag.AlternativeSessions as SelectList;
+                                    if (altSessions != null && altSessions.Count() > 0)
+                                    {
+                                        foreach (var option in altSessions)
+                                        {
+                                            <option value="@option.Value">@option.Text</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option disabled class="text-muted">No alternative sessions available</option>
+                                    }
+                                }
+                            </select>
+                            <div class="alert alert-warning mt-2 small">
+                                <i class="bi bi-exclamation-triangle me-1"></i> This may create new conflicts—review after applying.
+                            </div>
+                        </div>
+                    }
+                    else if (Model.Type == "Demmie")
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Current Demmie</label>
+                                    @{
+                                        var conflictingDemmie = ViewBag.ConflictingDemmie as PersonalSchedulingAssistant.Models.Demmie;
+                                    }
+                                    @if (conflictingDemmie != null)
+                                    {
+                                        <p class="form-control-plaintext bg-light p-2 border">@conflictingDemmie.FirstName @conflictingDemmie.LastName</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-danger">Unable to load current Demmie.</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Reassign to New Demmie</label>
+                                    <select name="newDemmieId" class="form-select">
+                                        <option value="">-- Select Available Demmie --</option>
+                                        @{
+                                            var availableDemmies = ViewBag.AvailableDemmies as SelectList;
+                                            if (availableDemmies != null && availableDemmies.Count() > 0)
+                                            {
+                                                foreach (var option in availableDemmies)
+                                                {
+                                                    <option value="@option.Value">@option.Text</option>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <option disabled class="text-muted">No available Demmies</option>
+                                            }
+                                        }
+                                    </select>
+                                    <small class="text-muted">Choose an unassigned Demmie for this session.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info mt-2 small">
+                            <i class="bi bi-info-circle me-1"></i> This will reassign the conflicting session (@(Model.Session2?.Module?.ModuleCode ?? "Unknown")) to the selected Demmie.
+                        </div>
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Apply Override
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

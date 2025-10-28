@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Allocation Dashboard";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary">
+        <i class="fas fa-layer-group"></i> Allocation Management Dashboard
+    </h2>
+
+    <p class="text-muted">
+        Manage student allocations, session configurations and conflict.
+    </p>
+
+    <div class="row g-4 mt-4">
+
+        <!-- Configure Allocations -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Configure Allocations</h5>
+                    <p class="card-text text-muted">
+                        Set allocation strategies, assign venues, and preview group distributions.
+                    </p>
+                    <a asp-action="Configure" class="btn btn-outline-primary">Go to Configuration</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finalised Allocations -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-success h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">View Finalised Allocations</h5>
+                    <p class="card-text text-muted">
+                        Review completed session allocations grouped by module and venue.
+                    </p>
+                    <a asp-action="Finalised" class="btn btn-outline-success">View Finalised</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-5">
+        <a asp-controller="Lecturer" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            <i class="fas fa-home me-2"></i> Back to Overview
+        </a>
+
+        <a asp-controller="Conflict" asp-action="Index" class="btn btn-primary px-4 py-2 fw-semibold">
+            <i class="fas fa-tasks me-2"></i> View Conflicts
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        //card hover
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', () => card.classList.add('shadow-lg'));
+            card.addEventListener('mouseleave', () => card.classList.remove('shadow-lg'));
+        });
+    </script>
+}

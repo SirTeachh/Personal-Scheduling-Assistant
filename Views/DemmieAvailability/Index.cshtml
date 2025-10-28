@@ -1,0 +1,63 @@
+﻿@model IEnumerable<PersonalSchedulingAssistant.Models.DemmieAvailability>
+
+@{
+    ViewData["Title"] = "My Availability";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4">
+        <i class="bi bi-calendar-week"></i> My Availability
+    </h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">No availability set yet.</div>
+    }
+    else
+    {
+        <table class="table table-striped align-middle shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th>Weekday</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td>@a.WeekDay</td>
+                        <td>@a.StartTime.ToString(@"hh\:mm")</td>
+                        <td>@a.EndTime.ToString(@"hh\:mm")</td>
+                        <td>
+                            @if (a.IsAvailable)
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Unavailable</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+        <a asp-controller="Demmie" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            <i class="fas fa-home me-2"></i> Back to Overview
+        </a>
+        <a asp-action="Edit" class="btn btn-primary mt-3">
+            <i class="fas fa-pencil-square"></i> Edit Availability
+        </a>
+    </div>
+</div>

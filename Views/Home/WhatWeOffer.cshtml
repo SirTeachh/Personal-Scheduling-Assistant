@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "What We Offer";
+}
+
+<style>
+    /* Page background */
+    body {
+        background: linear-gradient(135deg, #0a2540, #163d66);
+        background-attachment: fixed;
+        color: #f8f9fa;
+    }
+
+    /* Header */
+    .page-header {
+        color: #fff;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .gradient-section {
+        background: linear-gradient(135deg, #0a2540, #163d66);
+        color: #f8f9fa;
+    }
+
+    /* Card styling */
+    .offer-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .offer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+    /* Icon circle */
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        background: linear-gradient(135deg, #0a2540, #1b4a7d);
+        color: #fff;
+    }
+
+    /* Card title */
+    .offer-card h5 {
+        font-weight: 600;
+        color: #0a2540;
+    }
+
+    .offer-card p {
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    /* Fade-in animation */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s forwards;
+    }
+
+    @@keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container gradient-section pt-5 pb-5">
+    <div class="text-center mb-5 page-header">
+        <h1 class="display-4 fw-bold">What We Offer</h1>
+        <p class="lead">Explore the features that make Scheduling Assistant the ultimate tool for managing academic schedules with ease.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4 fade-in">
+            <div class="card offer-card text-center shadow-sm h-100 p-3">
+                <div class="icon-circle mb-3">
+                    <i class="fas fa-calendar-check fa-2x"></i>
+                </div>
+                <h5>Smart Scheduling</h5>
+                <p>Automatically create and manage schedules for lecturers, demmies, and sessions to optimize time and resources.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 fade-in" style="animation-delay: 0.1s;">
+            <div class="card offer-card text-center shadow-sm h-100 p-3">
+                <div class="icon-circle mb-3">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <h5>Team Management</h5>
+                <p>Assign roles, manage availability, and track team performance with ease and precision.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 fade-in" style="animation-delay: 0.2s;">
+            <div class="card offer-card text-center shadow-sm h-100 p-3">
+                <div class="icon-circle mb-3">
+                    <i class="fas fa-bell fa-2x"></i>
+                </div>
+                <h5>Notifications & Alerts</h5>
+                <p>Stay informed with instant notifications for session changes, updates, and reminders.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 fade-in" style="animation-delay: 0.3s;">
+            <div class="card offer-card text-center shadow-sm h-100 p-3">
+                <div class="icon-circle mb-3">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                </div>
+                <h5>Analytics & Reports</h5>
+                <p>Gain insights into allocations, team hours, and productivity through detailed analytics and reports.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 fade-in" style="animation-delay: 0.4s;">
+            <div class="card offer-card text-center shadow-sm h-100 p-3">
+                <div class="icon-circle mb-3">
+                    <i class="fas fa-mobile-alt fa-2x"></i>
+                </div>
+                <h5>Mobile Friendly</h5>
+                <p>Access Scheduling Assistant from any device with full mobile responsiveness and smooth performance.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 fade-in" style="animation-delay: 0.5s;">
+            <div class="card offer-card text-center shadow-sm h-100 p-3">
+                <div class="icon-circle mb-3">
+                    <i class="fas fa-shield-alt fa-2x"></i>
+                </div>
+                <h5>Secure & Reliable</h5>
+                <p>Your data is protected with robust encryption and reliable infrastructure ensuring confidentiality and trust.</p>
+            </div>
+        </div>
+    </div>
+</div>

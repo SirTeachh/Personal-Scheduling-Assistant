@@ -1,0 +1,93 @@
+﻿@model PersonalSchedulingAssistant.Models.Demmie
+
+@{
+    ViewData["Title"] = "Hour Tracking";
+    var progress = Model != null && Model.WeeklyHourLimit > 0
+        ? (int)((double)Model.HoursWorkedThisWeek / Model.WeeklyHourLimit * 100)
+        : 0;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-warning"><i class="fas fa-hourglass-half"></i> Hour Tracking</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Warning"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (Model == null)
+    {
+        <div class="alert alert-danger">No Demmie profile found.</div>
+    }
+    else
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5>Weekly Progress</h5>
+                <div class="progress mb-3" style="height: 25px;">
+                    <div class="progress-bar @(progress >= 100 ? "bg-danger" : "bg-warning")"
+                         role="progressbar"
+                         style="width: @Math.Min(progress, 100)%"
+                         aria-valuenow="@progress"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
+                        @progress%
+                    </div>
+                </div>
+
+                <p><strong>Hours Worked:</strong> @Model.HoursWorkedThisWeek</p>
+                <p><strong>Weekly Limit:</strong> @Model.WeeklyHourLimit</p>
+
+                @if (Model.HoursWorkedThisWeek > Model.WeeklyHourLimit)
+                {
+                    <div class="alert alert-danger mt-3">
+                        You’ve exceeded your weekly limit! Please contact your lecturer.
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info mt-3">
+                        You have @((Model.WeeklyHourLimit - Model.HoursWorkedThisWeek)) hour(s) remaining this week.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- 🔹 Add Hours Form -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5>Add Additional Hours</h5>
+                <form asp-action="AddHours" method="post" class="mt-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-6">
+                            <label for="additionalHours" class="form-label">Enter Hours Worked:</label>
+                            <input type="number" class="form-control" id="additionalHours" name="additionalHours" min="1" max="24" required />
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-plus-circle"></i> Add Hours
+                            </button>
+                        </div>
+                    </div>
+                    @Html.AntiForgeryToken()
+                </form>
+            </div>
+        </div>
+    }
+
+    <div class="align-items-center mt-4">
+        <a asp-controller="Demmie" asp-action="Index" class="btn btn-outline-secondary px-4 py-2 fw-semibold">
+            <i class="fas fa-home me-2"></i> Back to Overview
+        </a>
+    </div>
+</div>

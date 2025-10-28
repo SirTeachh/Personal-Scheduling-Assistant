@@ -1,0 +1,302 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: "Poppins", sans-serif;
+    }
+
+    main.container {
+        background-color: transparent !important;
+    }
+
+    /* Key Animations */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Animation Utilities */
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 1s ease forwards;
+    }
+
+    .fade-in-up {
+        opacity: 0;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .zoom-in {
+        opacity: 0;
+        animation: zoomIn 0.8s ease forwards;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(to right, #0a2540, #1c4e80);
+        color: #fff;
+        padding: 80px 30px;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease forwards;
+    }
+
+        .hero-section:hover {
+            transform: translateY(-3px);
+        }
+
+    /* Section Title */
+    .section-title {
+        text-align: center;
+        font-weight: 700;
+        color: #0a2540;
+        margin-bottom: 40px;
+        position: relative;
+        animation: fadeInUp 1s ease forwards;
+    }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: #1c4e80;
+            margin: 12px auto 0;
+            border-radius: 10px;
+        }
+
+    /* Cards */
+    .card {
+        border: none;
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease forwards;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    /* Background section */
+    .p-5.rounded-4.shadow-sm.text-white {
+        animation: fadeInUp 1s ease forwards;
+    }
+
+    .team-card img {
+        border: 4px solid #1c4e80;
+        object-fit: cover;
+        animation: zoomIn 1s ease forwards;
+    }
+
+    .contact-section {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 1s ease forwards;
+    }
+
+    a.text-dark:hover {
+        color: #1c4e80 !important;
+    }
+</style>
+
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="hero-section mb-5">
+        <h1 class="display-5 fw-bold">Personal Scheduling Assistant</h1>
+        <p class="lead">A smart platform designed to make academic scheduling simple, efficient, and personalized.</p>
+    </div>
+
+    <!-- Background Section -->
+    <section class="fade-in-up">
+        <h2 class="section-title">Project Background</h2>
+        <div class="p-5 rounded-4 shadow-sm text-white"
+             style="background: linear-gradient(to right, #0a2540, #163d66);">
+            <p class="fs-5 mb-3">
+                <strong>Personal Scheduling Assistant for Classes and Practicals</strong> is an Honours Project developed to
+                address inefficiencies in student timetable communication at the University of the Free State (UFS).
+            </p>
+            <p>
+                Students often receive generalized timetables containing all possible sessions for each module, even duplicates.
+                This leads to confusion and unnecessary workload, as they think they must attend every listed session.
+            </p>
+
+            <div class="bg-light text-dark p-4 rounded-3 mt-4 fade-in">
+                <h5 class="fw-bold text-primary mb-3">This system solves that by:</h5>
+                <ul class="list-unstyled">
+                    <li>✔ Allowing lecturers to define student allocation rules (round-robin, capacity, or priority-based).</li>
+                    <li>✔ Assigning demmies automatically based on venue capacity and student numbers.</li>
+                    <li>✔ Generating personalized timetables for each student.</li>
+                    <li>✔ Detecting and resolving scheduling conflicts automatically.</li>
+                    <li>✔ Allowing students to request reallocation in case of clashes.</li>
+                    <li>✔ Enabling lecturers to manually manage allocations when needed.</li>
+                </ul>
+            </div>
+
+            <div class="mt-4 fade-in">
+                <p><strong>Supervisor:</strong> Prof. Tanya Stott</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="mt-5 fade-in-up">
+        <h2 class="section-title">Our Mission & Vision</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm zoom-in">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Our Mission</h5>
+                        <p class="card-text">
+                            To streamline scheduling and resource allocation through innovative, intelligent, and transparent management tools.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm zoom-in" style="animation-delay: 0.3s;">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">Our Vision</h5>
+                        <p class="card-text">
+                            To be the benchmark academic scheduling solution that empowers institutions, lecturers, and students through smart automation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="mt-5 fade-in-up">
+        <h2 class="section-title">Meet Our Team</h2>
+        <div class="row g-4">
+            <div class="col-sm-6 col-md-4">
+                <div class="card team-card text-center shadow-sm p-3 zoom-in">
+                    <img src="~/images/Profile_avatar.png" class="rounded-circle mx-auto mt-3" style="width:120px; height:120px;" alt="Oratile Molongwana">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Oratile Molongwana</h5>
+                        <p class="card-text text-muted">Lead Developer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="card team-card text-center shadow-sm p-3 zoom-in" style="animation-delay: 0.2s;">
+                    <img src="~/images/Profile_avatar.png" class="rounded-circle mx-auto mt-3" style="width:120px; height:120px;" alt="Prof. Tanya Stott">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Prof. Tanya Stott</h5>
+                        <p class="card-text text-muted">Supervisor</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="card team-card text-center shadow-sm p-3 zoom-in" style="animation-delay: 0.4s;">
+                    <img src="~/images/Profile_avatar.png" class="rounded-circle mx-auto mt-3" style="width:120px; height:120px;" alt="Mr. Jaco Marais">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">Mr. Jaco Marais</h5>
+                        <p class="card-text text-muted">Co-Supervisor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Info -->
+    <section class="mt-5 contact-section fade-in">
+        <div class="row">
+            <div class="col-md-6">
+                <h4 class="fw-bold mb-3">Contact Us</h4>
+                <p>Email: <a href="mailto:scheduling2003@gmail.com" class="text-dark">scheduling2003@gmail.com</a></p>
+                <p>Phone: +27 79 675 3823</p>
+            </div>
+            <div class="col-md-6">
+                <h4 class="fw-bold mb-3">Follow Us</h4>
+                <a href="https://github.com/SirTeachh" class="me-3 text-dark"><i class="fab fa-github fa-2x"></i></a>
+                <a href="https://www.linkedin.com/in/oratile-molongwana" class="me-3 text-dark"><i class="fab fa-linkedin fa-2x"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testing Credentials -->
+    <section class="mt-5 fade-in-up">
+        <h2 class="section-title">For Testing</h2>
+
+        <div class="p-4 rounded-4 shadow-sm bg-white">
+            <div class="alert alert-info mb-4">
+                <i class="bi bi-info-circle"></i> Use the following demo accounts to test system functionality.
+            </div>
+
+            <div class="row g-4">
+                <!-- Admin -->
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-person-badge"></i> Admin</h5>
+                            <p class="mb-1"><strong>Username:</strong> admin@scheduling.com</p>
+                            <p><strong>Password:</strong> AlphaNumeric@1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lecturer -->
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-success mb-3"><i class="bi bi-mortarboard"></i> Lecturer</h5>
+                            <p class="mb-1"><strong>Username:</strong> lecturer1@scheduling.com</p>
+                            <p><strong>Password:</strong> Lecturer@123</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demmie -->
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="fw-bold text-warning mb-3"><i class="bi bi-person-workspace"></i> Demmie</h5>
+                            <p class="mb-1"><strong>Username:</strong> karabo.demmie@scheduling.com</p>
+                            <p><strong>Password:</strong> Demmie@123</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
